@@ -53,6 +53,11 @@ const mockCloseTask = vi.fn();
 
 const mockPlugin = {
   services: {
+    feedback: {
+      notice: async (message: string, duration?: number) => {
+        new Notice(message, duration);
+      },
+    },
     todoist: {
       actions: {
         closeTask: mockCloseTask,

@@ -1,7 +1,7 @@
 import { setLanguage, t } from "@/i18n";
 import "@/styles/main.scss";
 import type { PluginManifest } from "obsidian";
-import { type App, Notice, Plugin } from "obsidian";
+import { type App, Plugin } from "obsidian";
 
 import { TodoistApiClient } from "@/api";
 import { ObsidianFetcher } from "@/api/fetcher";
@@ -42,7 +42,7 @@ export default class TodoistPlugin extends Plugin {
         await this.applyMigrations();
       } catch (error: unknown) {
         console.error("Failed to apply migrations:", error);
-        new Notice(t().notices.migrationFailed);
+        void this.services.feedback.notice(t().notices.migrationFailed);
       }
       await this.loadApiClient();
     });
@@ -63,7 +63,7 @@ export default class TodoistPlugin extends Plugin {
       return;
     }
 
-    this.services.modals.onboarding({
+    await this.services.modals.onboarding({
       onTokenSubmit: async (token) => {
         await accessor.write(token);
         await this.services.todoist.initialize(new TodoistApiClient(token, new ObsidianFetcher()));

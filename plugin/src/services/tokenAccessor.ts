@@ -1,9 +1,16 @@
 import type { SecretStorage, Vault } from "obsidian";
+import { createStore } from "zustand/vanilla";
 
 import type { TokenStorageSetting } from "@/settings";
 import { useSettingsStore } from "@/settings";
 
 export class VaultTokenAccessor {
+  public readonly presence = createStore<{
+    status: "unknown" | "absent" | "present" | "error";
+    storage: TokenStorageSetting | undefined;
+    secretId: string | undefined;
+  }>(() => ({ status: "unknown", storage: undefined, secretId: undefined }));
+
   private readonly secrets: SecretStorage;
   private readonly vault: Vault;
   private readonly path: string;
@@ -14,14 +21,37 @@ export class VaultTokenAccessor {
     this.path = `${vault.configDir}/todoist-token`;
   }
 
-  read(): Promise<string | null> {
+  async read(): Promise<string | null> {
     const settings = useSettingsStore.getState();
-    return this.readFromStorage(settings.tokenStorage);
+    let token: string | null;
+    try {
+      token = await this.readFromStorage(settings.tokenStorage);
+    } catch (error) {
+      this.presence.setState({
+        status: "error",
+        storage: settings.tokenStorage,
+        secretId: settings.apiTokenSecretId,
+      });
+      throw error;
+    }
+    const current = useSettingsStore.getState();
+    if (
+      current.tokenStorage === settings.tokenStorage &&
+      current.apiTokenSecretId === settings.apiTokenSecretId
+    ) {
+      this.presence.setState({
+        status: token === null ? "absent" : "present",
+        storage: settings.tokenStorage,
+        secretId: settings.apiTokenSecretId,
+      });
+    }
+    return token;
   }
 
-  write(token: string): Promise<void> {
+  async write(token: string): Promise<void> {
     const settings = useSettingsStore.getState();
-    return this.writeToStorage(token, settings.tokenStorage);
+    await this.writeToStorage(token, settings.tokenStorage);
+    await this.read();
   }
 
   async migrateStorage(from: TokenStorageSetting, to: TokenStorageSetting): Promise<void> {

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import { t } from "@/i18n";
 import { PluginContext } from "@/ui/context";
+import { useQuietMode } from "@/ui/QuietBoundary";
 
 import { TodoistApiClient } from "../../api";
 import { ObsidianFetcher } from "../../api/fetcher";
@@ -16,6 +17,7 @@ type Props = {
 
 export const TokenChecker: React.FC<Props> = ({ tester }) => {
   const plugin = PluginContext.use();
+  const quiet = useQuietMode();
   const { token: tokenAccessor, todoist, modals } = plugin.services;
 
   const [tokenState, setTokenState] = useState<TokenValidation.Result>({
@@ -41,21 +43,23 @@ export const TokenChecker: React.FC<Props> = ({ tester }) => {
   }, [plugin, tester, tokenValidationCount]);
 
   const openModal = () => {
-    modals.onboarding({
-      onTokenSubmit: async (token) => {
-        setTokenValidationCount((old) => old + 1);
-
-        await tokenAccessor.write(token);
-        await todoist.initialize(new TodoistApiClient(token, new ObsidianFetcher()));
+    void modals.onboarding(
+      {
+        onTokenSubmit: async (token) => {
+          await tokenAccessor.write(token);
+          setTokenValidationCount((old) => old + 1);
+          await todoist.initialize(new TodoistApiClient(token, new ObsidianFetcher()));
+        },
       },
-    });
+      true,
+    );
   };
 
   const buttonLabel = t().settings.general.apiToken.buttonLabel;
 
   return (
     <>
-      <TokenValidationIcon status={tokenState} />
+      {!quiet && <TokenValidationIcon status={tokenState} />}
       <Setting.ButtonControl
         label={buttonLabel}
         icon="settings"

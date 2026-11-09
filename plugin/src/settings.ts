@@ -21,6 +21,7 @@ export type LabelsDefaultSetting = Array<{
 const defaultSettings: Settings = {
   apiTokenSecretId: "swt-todoist-api-token",
   tokenStorage: "secrets",
+  quietWhenNoToken: true,
 
   fadeToggle: true,
 
@@ -50,6 +51,7 @@ const defaultSettings: Settings = {
 export type Settings = {
   apiTokenSecretId: string;
   tokenStorage: TokenStorageSetting;
+  quietWhenNoToken: boolean;
 
   fadeToggle: boolean;
   autoRefreshToggle: boolean;

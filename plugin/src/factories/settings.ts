@@ -4,6 +4,7 @@ export function makeSettings(overrides?: Partial<Settings>): Settings {
   return {
     apiTokenSecretId: "swt-todoist-api-token",
     tokenStorage: "secrets",
+    quietWhenNoToken: true,
     fadeToggle: true,
     autoRefreshToggle: false,
     autoRefreshInterval: 60,

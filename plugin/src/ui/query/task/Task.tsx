@@ -1,5 +1,4 @@
 import * as motion from "motion/react-m";
-import { Notice } from "obsidian";
 import React, { type MouseEvent } from "react";
 import { Checkbox } from "react-aria-components";
 
@@ -41,7 +40,7 @@ export const Task: React.FC<Props> = ({ tree }) => {
       await plugin.services.todoist.actions.closeTask(tree.id);
     } catch (error: unknown) {
       console.error("Failed to close task", error);
-      new Notice(t().query.failedCloseMessage, noticeDurationMs);
+      void plugin.services.feedback.notice(t().query.failedCloseMessage, noticeDurationMs);
     }
   };
 

@@ -1,5 +1,5 @@
 import { toCalendarDateTime, toZoned } from "@internationalized/date";
-import { Notice, type TFile } from "obsidian";
+import type { TFile } from "obsidian";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { Button, Label, Menu, MenuItem, MenuTrigger } from "react-aria-components";
@@ -104,7 +104,7 @@ const calculateDefaultProject = (
   const project = plugin.services.todoist.data().projects.byId(projectSetting.projectId);
   if (project === undefined) {
     const noticeMsg = t().createTaskModal.defaultProjectDeletedNotice(projectSetting.projectName);
-    new Notice(noticeMsg);
+    void plugin.services.feedback.notice(noticeMsg);
     return getInboxProject(plugin);
   }
 
@@ -136,7 +136,7 @@ const calculateDefaultLabels = (
 
   if (deletedLabelNames.length > 0) {
     const noticeMsg = t().createTaskModal.defaultLabelsDeletedNotice(deletedLabelNames.join(", "));
-    new Notice(noticeMsg);
+    void plugin.services.feedback.notice(noticeMsg);
   }
 
   return validLabels;
@@ -261,16 +261,16 @@ const CreateTaskModalContent: React.FC<CreateTaskProps> = ({
         );
         try {
           await navigator.clipboard.writeText(markdownLink);
-          new Notice(i18n.linkCopiedNotice);
+          void plugin.services.feedback.notice(i18n.linkCopiedNotice);
         } catch (clipboardErr) {
-          new Notice(i18n.linkCopyFailedNotice);
+          void plugin.services.feedback.notice(i18n.linkCopyFailedNotice);
           console.error("Failed to copy to clipboard", clipboardErr);
         }
       } else {
-        new Notice(i18n.successNotice);
+        void plugin.services.feedback.notice(i18n.successNotice);
       }
     } catch (err) {
-      new Notice(i18n.errorNotice);
+      void plugin.services.feedback.notice(i18n.errorNotice);
       console.error("Failed to create task", err);
     }
   };
@@ -387,6 +387,6 @@ const getInboxProject = (plugin: TodoistPlugin): ProjectIdentifier => {
 
   const i18n = t().createTaskModal;
 
-  new Notice(i18n.failedToFindInboxNotice);
+  void plugin.services.feedback.notice(i18n.failedToFindInboxNotice);
   throw new Error("Could not find inbox project");
 };

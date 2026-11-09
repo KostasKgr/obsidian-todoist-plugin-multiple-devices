@@ -1,8 +1,7 @@
-import { Notice } from "obsidian";
 import type React from "react";
 
 import { t } from "@/i18n";
-import { ModalContext } from "@/ui/context";
+import { ModalContext, PluginContext } from "@/ui/context";
 
 import { TokenValidation } from "../../token";
 import { TokenInputForm } from "./TokenInputForm";
@@ -16,13 +15,14 @@ type OnboardingProps = {
 
 export const OnboardingModal: React.FC<OnboardingProps> = ({ onTokenSubmit }) => {
   const modal = ModalContext.use();
+  const plugin = PluginContext.use();
   const i18n = t().onboardingModal;
 
   const callback = (token: string) => {
     modal.close();
     onTokenSubmit(token).catch((e) => {
       console.error("Failed to save API token", e);
-      new Notice(i18n.failureNoticeMessage);
+      void plugin.services.feedback.notice(i18n.failureNoticeMessage);
     });
   };
 

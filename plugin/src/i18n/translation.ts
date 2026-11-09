@@ -16,6 +16,10 @@ export type Translations = {
         description: string;
         buttonLabel: string;
       };
+      quietWhenNoToken: {
+        label: string;
+        description: string;
+      };
       tokenStorage: {
         label: string;
         description: string;

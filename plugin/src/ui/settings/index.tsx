@@ -106,6 +106,12 @@ const SettingsRoot: React.FC<Props> = ({ plugin }) => {
         <TokenChecker tester={TokenValidation.DefaultTester} />
       </Setting.Root>
       <Setting.Root
+        name={i18n.general.quietWhenNoToken.label}
+        description={i18n.general.quietWhenNoToken.description}
+      >
+        <Setting.ToggleControl {...toggleProps("quietWhenNoToken")} />
+      </Setting.Root>
+      <Setting.Root
         name={i18n.general.tokenStorage.label}
         description={i18n.general.tokenStorage.description}
       >

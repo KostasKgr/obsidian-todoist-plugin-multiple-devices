@@ -5,6 +5,7 @@ import { t } from "@/i18n";
 import type { ProjectDefaultSetting } from "@/settings";
 import { ObsidianIcon } from "@/ui/components/obsidian-icon";
 import { PluginContext } from "@/ui/context";
+import { useQuietMode } from "@/ui/QuietBoundary";
 
 type Props = {
   value: ProjectDefaultSetting;
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export const ProjectDropdownControl: React.FC<Props> = ({ value, onChange }) => {
+  const quiet = useQuietMode();
   const [selected, setSelected] = useState(value);
   const plugin = PluginContext.use();
   const todoist = plugin.services.todoist;
@@ -56,7 +58,7 @@ export const ProjectDropdownControl: React.FC<Props> = ({ value, onChange }) => 
 
   return (
     <div className="project-dropdown-container">
-      {isProjectDeleted && (
+      {isProjectDeleted && !quiet && (
         <div className="project-dropdown-warning-icon" title={i18n.deletedWarning}>
           <ObsidianIcon size="s" id="lucide-alert-triangle" />
         </div>
@@ -70,7 +72,8 @@ export const ProjectDropdownControl: React.FC<Props> = ({ value, onChange }) => 
         ))}
         {isProjectDeleted && selected && (
           <option value={selected.projectId} disabled>
-            {selected.projectName} ({i18n.deleted})
+            {selected.projectName}
+            {!quiet && ` (${i18n.deleted})`}
           </option>
         )}
       </select>

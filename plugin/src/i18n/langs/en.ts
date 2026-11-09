@@ -18,6 +18,11 @@ export const en: Translations = {
         description: "The Todoist API token to use when fetching tasks",
         buttonLabel: "Setup",
       },
+      quietWhenNoToken: {
+        label: "Stay quiet when no API token is configured",
+        description:
+          "Suppress popups, notices, and query displays when no API token is configured. Token setup remains available here. Has no effect when a token is set, even if it is invalid.",
+      },
       tokenStorage: {
         label: "Token storage",
         description: "Where the plugin should store your Todoist API token",

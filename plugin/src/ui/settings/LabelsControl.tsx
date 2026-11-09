@@ -7,6 +7,7 @@ import { t } from "@/i18n";
 import type { LabelsDefaultSetting } from "@/settings";
 import { ObsidianIcon } from "@/ui/components/obsidian-icon";
 import { PluginContext } from "@/ui/context";
+import { useQuietMode } from "@/ui/QuietBoundary";
 
 type Props = {
   value: LabelsDefaultSetting;
@@ -14,6 +15,7 @@ type Props = {
 };
 
 export const LabelsControl: React.FC<Props> = ({ value, onChange }) => {
+  const quiet = useQuietMode();
   const [selected, setSelected] = useState(value);
   const plugin = PluginContext.use();
   const todoist = plugin.services.todoist;
@@ -80,7 +82,7 @@ export const LabelsControl: React.FC<Props> = ({ value, onChange }) => {
         {selected.length === 0 && <div className="labels-control-empty-state">{i18n.noLabels}</div>}
         {selected.map((labelSetting) => {
           const label = labelsById.get(labelSetting.labelId);
-          const isDeleted = label === undefined;
+          const isDeleted = !quiet && label === undefined;
 
           return (
             <div

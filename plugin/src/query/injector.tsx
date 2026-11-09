@@ -15,6 +15,7 @@ import {
   PluginContext,
   RenderChildContext,
 } from "@/ui/context";
+import { QuietBoundary } from "@/ui/QuietBoundary";
 import { QueryError } from "@/ui/query/QueryError";
 import { QueryRoot } from "@/ui/query/QueryRoot";
 
@@ -126,7 +127,9 @@ class ReactRenderer<T extends {}> extends MarkdownRenderChild {
       <MarkdownEditButtonContext.Provider value={this.store}>
         <RenderChildContext.Provider value={this}>
           <PluginContext.Provider value={this.plugin}>
-            <Component {...this.props} />
+            <QuietBoundary>
+              <Component {...this.props} />
+            </QuietBoundary>
           </PluginContext.Provider>
         </RenderChildContext.Provider>
       </MarkdownEditButtonContext.Provider>,
