@@ -1,7 +1,7 @@
 {
   "id": "todoist-sync-plugin-dev",
-  "name": "Todoist Sync",
-  "version": "2.6.0",
+  "name": "Todoist Sync (dev)",
+  "version": "2.6.0-dev",
   "minAppVersion": "1.11.4",
   "description": "Materialize Todoist tasks within Obsidian notes.",
   "author": "Jamie Brynes",
