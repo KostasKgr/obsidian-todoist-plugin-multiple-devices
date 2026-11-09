@@ -11,7 +11,7 @@
     "lint:fix": "biome check --write ."
   },
   "dependencies": {
-    "@obsidian-todoist/plugin": "*",
+    "@obsidian-todoist/plugin": "workspace:*",
     "picocolors": "^1.1.1"
   },
   "devDependencies": {
