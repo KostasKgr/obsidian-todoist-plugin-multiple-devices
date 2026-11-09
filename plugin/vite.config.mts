@@ -22,7 +22,7 @@ function getOutDir(): string | undefined {
     return vaultDir;
   }
 
-  return path.join(vaultDir, ".obsidian", "plugins", "todoist-sync-plugin");
+  return path.join(vaultDir, ".obsidian", "plugins", "todoist-sync-plugin-dev");
 }
 
 function getBuildStamp(): string {
